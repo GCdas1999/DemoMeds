@@ -1,0 +1,64 @@
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.Model.Meds;
+import com.example.demo.Repository.MedRepository;
+
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/home")
+public class RestAPIController {
+
+    @Autowired
+    private MedRepository medRepository;
+
+    @GetMapping("/list")
+    public Iterable<Meds> getAllMeds() {
+        return medRepository.findAll();
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> addNewMeds(@RequestBody Meds newMeds) {
+        Meds savedMeds = medRepository.save(newMeds);
+        return ResponseEntity.status(HttpStatus.CREATED).body("New meds " + savedMeds.getName() + " have been added successfully");
+    }
+
+    @DeleteMapping("/delete/{name}")
+    public ResponseEntity<String> deleteUser(@PathVariable String name) {
+        Optional<Meds> medDetails = medRepository.findByName(name);
+        if (medDetails.isPresent()) {
+            medRepository.delete(medDetails.get());
+            return ResponseEntity.ok("Medicine " + name + " has been deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medicine " + name + " not found");
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Meds> searchMed(@RequestParam(name = "name") String name) {
+        Optional<Meds> medDetails = medRepository.findByName(name);
+        return medDetails.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+
+    @PutMapping("/edit/{name}")
+    public ResponseEntity<String> updateMeds(@PathVariable String name, @RequestBody Meds updatedMeds) {
+        Optional<Meds> medDetails = medRepository.findByName(name);
+        if (medDetails.isPresent()) {
+            Meds existingMeds = medDetails.get();
+            existingMeds.setName(updatedMeds.getName()); 
+            existingMeds.setAmount(updatedMeds.getAmount());
+            medRepository.save(existingMeds);
+            return ResponseEntity.ok("Medicine " + existingMeds.getName() + " has been updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medicine " + name + " not found");
+        }
+    }
+}
