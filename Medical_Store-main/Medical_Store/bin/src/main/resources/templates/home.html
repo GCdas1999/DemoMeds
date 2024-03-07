@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Home</title>
+		<style>
+			body {
+             background-image: url("https://img.freepik.com/free-photo/medicine-capsules-global-health-with-geometric-pattern-digital-remix_53876-126742.jpg?w=1480&t=st=1709564746~exp=1709565346~hmac=5aa6c7dbbd4f02d06ffb16cf724c5ce70250ea7aa5f8c578ec60fb083dd6e0fe");
+             margin: 0;
+             padding: 0;
+			}
+			
+			.dashboard{
+				color: black;
+				padding: 40px;
+				text-align: center;
+			}
+			.dashboard_title{
+				font-size: 24px;
+				margin-top: 0;
+			}
+			.dashboard_user{
+				margin-top: 20px;
+			}
+			.dashboard_user_name{
+				font-size: 28px;
+				color: red;
+				
+			}
+		</style>
+	</head>
+	<body>
+		<div class="dashboard">
+			<h1 class="dashboard_title">Dashboard</h1>
+			<div class="dashboard_user">
+				<h2 th:text = "${userdetail.fullname}" class="dashboard_user_name">User's Name</h2>
+			</div>
+		</div>
+	</body>
+</html>
